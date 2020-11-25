@@ -67,8 +67,10 @@ func configHost() {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			sleep, err := cmd.PersistentFlags().GetInt64("sleep")
 			util.Check(err)
-			log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
-			time.Sleep(time.Duration(sleep) * time.Second)
+			if sleep > 0 {
+				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
+				time.Sleep(time.Duration(sleep) * time.Second)
+			}
 			return nil
 		},
 	}

@@ -12,7 +12,7 @@ import (
 func Start() {
 
 	// http.HandleFunc("/", Handle)
-	log.Printf("Starting server")
+	log.Printf("Starting server: http://localhost:5010/")
 	err := http.ListenAndServe("0.0.0.0:5010", Handler())
 	util.Check(err)
 }
