@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"runtime"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -60,13 +61,20 @@ func configGuest() {
 }
 
 func configHost() {
-	rootCmd.AddCommand(&cobra.Command{
+	cmd := &cobra.Command{
 		Use:  "host",
 		Args: cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			sleep, err := cmd.PersistentFlags().GetInt64("sleep")
+			util.Check(err)
+			log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
+			time.Sleep(time.Duration(sleep) * time.Second)
 			return nil
 		},
-	})
+	}
+	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
+	rootCmd.AddCommand(cmd)
+
 }
 
 func Execute() {
