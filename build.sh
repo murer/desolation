@@ -20,4 +20,10 @@ cmd_test_ssh() {
   ssh -o "ProxyCommand ./build.sh main guest %h %p" "$@"
 }
 
+cmd_resource2go() {
+  ls guest/public | while read k; do
+    echo "package public"
+  done
+}
+
 cd "$(dirname "$0")"; _cmd="${1?"cmd is required"}"; shift; "cmd_${_cmd}" "$@"
