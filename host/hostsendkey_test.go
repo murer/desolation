@@ -2,9 +2,6 @@ package host_test
 
 import (
 	"testing"
-
-	"github.com/murer/desolation/host"
-	"github.com/murer/desolation/message"
 )
 
 func TestSendkey(t *testing.T) {
@@ -12,9 +9,9 @@ func TestSendkey(t *testing.T) {
 }
 
 func TestSendMsg(t *testing.T) {
-	host.HostSendMsg(&message.Message{
-		Name:    "echo",
-		Headers: map[string]string{"rid": "x"},
-		Payload: "y",
-	})
+	// host.HostSendMsg(&message.Message{
+	// 	Name:    "echo",
+	// 	Headers: map[string]string{"rid": "x"},
+	// 	Payload: "y",
+	// })
 }

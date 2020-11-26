@@ -55,7 +55,6 @@ func Capture() *message.Message {
 		log.Printf("x")
 		return &message.Message{Name: "nocode", Payload: ""}
 	}
-	log.Printf("y")
 	return message.Decode(text)
 }
 

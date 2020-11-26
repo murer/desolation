@@ -35,7 +35,7 @@ func Handler() http.Handler {
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Access: %s %s %s", r.RemoteAddr, r.Method, r.URL)
+	//log.Printf("Access: %s %s %s", r.RemoteAddr, r.Method, r.URL)
 	if r.Method == "GET" && r.URL.Path == "/api/version.txt" {
 		util.RespText(w, util.Version)
 	} else if r.Method == "POST" && r.URL.Path == "/api/command" {
@@ -50,7 +50,6 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 func messageExtract(r *http.Request) *message.Message {
 	reqBody := util.ReadAllString(r.Body)
 	if strings.HasPrefix(r.Header.Get("Content-Type"), "text/plain") {
-		log.Printf("xx: %#v", reqBody)
 		reqBody = string(util.B64Dec(reqBody))
 	}
 	return message.Decode(reqBody)

@@ -15,9 +15,9 @@ import (
 // xdotool key a b c Return
 
 func HostSendKeys(keys []string) {
-	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), 60000*time.Millisecond)
 	defer cancel()
-	args := append([]string{"key", "--delay", "5"}, keys...)
+	args := append([]string{"key", "--delay", "1"}, keys...)
 	cmd := exec.CommandContext(ctx, "xdotool", args...)
 	cmd.Start()
 	err := cmd.Wait()
