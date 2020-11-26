@@ -18,7 +18,6 @@ func HostSendKeys(keys []string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
 	defer cancel()
 	args := append([]string{"key", "--delay", "5"}, keys...)
-	log.Printf("aaaa %#v", args)
 	cmd := exec.CommandContext(ctx, "xdotool", args...)
 	cmd.Start()
 	err := cmd.Wait()
