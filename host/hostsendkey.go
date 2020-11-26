@@ -37,7 +37,8 @@ func HostSendMsg(msg *message.Message) {
 			array[i] = "underscore"
 		}
 	}
-	array = append("ctrl+a", "BackSpace", array, "Return")
+	array = append([]string{"ctrl+a", "BackSpace"}, array...)
+	array = append(array, "Return")
 	HostSendKeys(array)
 
 }
