@@ -27,7 +27,7 @@ func HostSendKeys(keys []string) {
 func HostSendMsg(msg *message.Message) {
 	encoded := message.Encode(msg)
 	encoded = util.B64Enc([]byte(encoded))
-	log.Print("encoded: %s", encoded)
+	log.Printf("encoded: %s", encoded)
 	array := strings.Split(encoded, "")
 	for i := 0; i < len(array); i++ {
 		if array[i] == "" {

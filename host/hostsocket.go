@@ -49,7 +49,7 @@ func SocketRead() []byte {
 	n, err := conn.Read(buf)
 	derr := DescError(err)
 	if derr == DESC_ERR_EOF {
-		log.Print("[%s] Socket EOF...")
+		log.Print("Socket EOF...")
 		return nil
 	}
 	if derr != DESC_ERR_TIMEOUT {
@@ -63,6 +63,6 @@ func SocketWrite(data []byte) {
 	n, err := conn.Write(data)
 	util.Check(err)
 	if n != len(data) {
-		log.Panicf("[%s] Wrong len, should was: %d", n, len(data))
+		log.Panicf("Wrong len, should be: %d, was: %d", n, len(data))
 	}
 }
