@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/murer/desolation/guest"
+	"github.com/murer/desolation/host"
 	"github.com/murer/desolation/util"
 )
 
@@ -71,6 +72,7 @@ func configHost() {
 				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
 				time.Sleep(time.Duration(sleep) * time.Second)
 			}
+			host.Start()
 			return nil
 		},
 	}

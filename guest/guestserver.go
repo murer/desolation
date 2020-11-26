@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/murer/desolation/message"
 	"github.com/murer/desolation/util"
@@ -48,6 +49,9 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 
 func messageExtract(r *http.Request) *message.Message {
 	reqBody := util.ReadAllString(r.Body)
+	if strings.HasPrefix(r.Header.Get("Content-Type"), "text/plain") {
+		reqBody = string(util.B64Dec(reqBody))
+	}
 	return message.Decode(reqBody)
 }
 

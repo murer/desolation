@@ -46,6 +46,7 @@
             dataType: 'json',
             url: 'api/command',
             data: msgInput,
+            contentType: 'text/plain',
             success: function (ret) {
                 $('.msg-output-text').val(JSON.stringify(ret, null, 4))
                 generateResp(ret)
@@ -54,10 +55,7 @@
     })
 
     $(window).ready(function() {
-        $('.msg-input').val(JSON.stringify({
-            Name: 'init',
-            Headers: { "rid": "init" }
-        }))
+        $('.msg-input').val('eyJOYW1lIjoiaW5pdCIsIkhlYWRlcnMiOnsicmlkIjoiaW5pdCJ9fQ==')
         $('form').submit()
     })
 

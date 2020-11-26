@@ -5,5 +5,5 @@ import (
 )
 
 func TestSendkey(t *testing.T) {
-	//host.HostSendKeys([]string{"j", "h", "e", "t", "i", "d", "s"})
+	//host.HostSendKeys([]string{"{"})
 }

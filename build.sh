@@ -17,7 +17,7 @@ cmd_vendor() {
 }
 
 cmd_test_ssh() {
-  ssh -o "ProxyCommand ./build.sh main guest %h %p" "$@"
+  ssh -o "ProxyCommand go run main.go guest %h %p" "$@"
 }
 
 cmd_resource2go() {
