@@ -12,7 +12,6 @@ import (
 )
 
 func QtPoc() {
-	fmt.Printf("aaaa")
 	widgets.NewQApplication(len(os.Args), os.Args)
 
 	var (
