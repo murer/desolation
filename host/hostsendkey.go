@@ -35,6 +35,8 @@ func HostSendMsg(msg *message.Message) {
 			array[i] = "minus"
 		} else if array[i] == "_" {
 			array[i] = "underscore"
+		} else if array[i] == "=" {
+			array[i] = "equal"
 		}
 	}
 	array = append([]string{"ctrl+a", "BackSpace"}, array...)
