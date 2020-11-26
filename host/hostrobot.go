@@ -3,6 +3,7 @@ package host
 import (
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/murer/desolation/message"
@@ -57,6 +58,9 @@ func Start() {
 
 func hostDataSend() {
 	data := SocketRead()
+	if data == nil {
+		os.Exit(0)
+	}
 	if len(data) > 0 {
 		msg := HostCommand(&message.Message{
 			Name:    "write",
@@ -69,17 +73,21 @@ func hostDataSend() {
 	}
 }
 
-func hostDataReceived() {
+func hostDataReceived() bool {
 	msg := HostCommand(&message.Message{
 		Name:    "read",
 		Headers: map[string]string{},
 		Payload: "",
 	})
+	if msg == nil {
+		return false
+	}
 	if msg.Name != "ok" {
 		log.Panicf("communication error: %v", msg)
 	}
 	data := util.B64Dec(msg.Payload)
 	SocketWrite(data)
+	return true
 }
 
 func handleResponse(msg *message.Message) {

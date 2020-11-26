@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/murer/desolation/message"
@@ -71,6 +72,9 @@ func HandleCommand(w http.ResponseWriter, r *http.Request) {
 		ret = HandleCommandWrite(msg, w, r)
 	} else if msg.Name == "read" {
 		ret = HandleCommandRead(msg, w, r)
+		if ret == nil {
+			os.Exit(0)
+		}
 	} else if msg.Name == "cw" {
 		ret = HandleCommandCW(msg, w, r)
 	} else if msg.Name == "init" {
