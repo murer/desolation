@@ -34,6 +34,9 @@ cmd_build_all() {
   cmd_build linux
   cmd_build darwin
   cmd_build windows
+  cd build
+  sha256sum -b * > SHA256
+  cd -
 }
 
 cmd_test() {
