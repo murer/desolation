@@ -59,6 +59,11 @@ func Start() {
 func hostDataSend() {
 	data := SocketRead()
 	if data == nil {
+		HostCommand(&message.Message{
+			Name:    "cw",
+			Headers: map[string]string{},
+			Payload: "",
+		})
 		os.Exit(0)
 	}
 	if len(data) > 0 {
