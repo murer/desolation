@@ -17,7 +17,7 @@ import (
 func HostSendKeys(keys []string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60000*time.Millisecond)
 	defer cancel()
-	args := append([]string{"key", "--delay", "1"}, keys...)
+	args := append([]string{"key", "--delay", "0"}, keys...)
 	cmd := exec.CommandContext(ctx, "xdotool", args...)
 	cmd.Start()
 	err := cmd.Wait()
@@ -38,8 +38,10 @@ func HostSendMsg(msg *message.Message) {
 			array[i] = "equal"
 		}
 	}
-	array = append([]string{"ctrl+a", "BackSpace"}, array...)
-	array = append(array, "Return")
+	HostSendKeys([]string{"ctrl+a"})
+	HostSendKeys([]string{"BackSpace"})
+	time.Sleep(5 * time.Millisecond)
 	HostSendKeys(array)
-
+	HostSendKeys([]string{"Return"})
+	time.Sleep(5 * time.Millisecond)
 }

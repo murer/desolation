@@ -53,7 +53,11 @@ func Capture() *message.Message {
 	text := parseQRCode(img)
 	if text == "" {
 		log.Printf("x")
-		return &message.Message{Name: "nocode", Payload: ""}
+		return &message.Message{
+			Name:    "nocode",
+			Headers: map[string]string{"rid": "nocode"},
+			Payload: "",
+		}
 	}
 	return message.Decode(text)
 }

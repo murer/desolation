@@ -44,10 +44,9 @@ func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Reques
 	buf := make([]byte, 512)
 	os.Stdin.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
 	n, err := os.Stdin.Read(buf)
-	log.Printf("Stdin  read %d", n)
 	derr := DescError(err)
 	if derr == DESC_ERR_EOF {
-		log.Print("[Stdin EOF...")
+		log.Print("Stdin EOF...")
 		return nil
 	}
 	if derr != DESC_ERR_TIMEOUT {
