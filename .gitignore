@@ -1,6 +1,5 @@
 gen_*
 .Trash*
 target
-vendor
 qtbox
 build
