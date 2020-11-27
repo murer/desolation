@@ -6,6 +6,7 @@ go:
 
 script:
   - go test -v ./...
+  
 
 # deploy:
 #   - provider: releases
