@@ -45,7 +45,7 @@ func SocketConnect(addr string) {
 
 func SocketRead() []byte {
 	conn.SetReadDeadline(time.Now().Add(1000 * time.Millisecond))
-	buf := make([]byte, 8)
+	buf := make([]byte, 512)
 	n, err := conn.Read(buf)
 	derr := DescError(err)
 	if derr == DESC_ERR_EOF {
