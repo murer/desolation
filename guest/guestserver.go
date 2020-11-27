@@ -5,8 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
+	"github.com/murer/desolation/guest/public"
 	"github.com/murer/desolation/message"
 	"github.com/murer/desolation/util"
 )
@@ -31,8 +33,34 @@ func Handler() http.Handler {
 	}
 	mux := http.NewServeMux()
 	//mux.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir(static))))
+	// mux.Handle("/public", http.HandlerFunc(HandleStatic))
 	mux.Handle("/", http.HandlerFunc(Handle))
 	return mux
+}
+
+func HandleStatic(w http.ResponseWriter, r *http.Request) {
+	filename := filepath.Base(r.URL.Path)
+	contentType := ""
+	if strings.HasSuffix(filename, ".js") {
+		contentType = "application/json"
+	} else if strings.HasSuffix(filename, ".css") {
+		contentType = "text/css; charset=utf-8"
+	} else if strings.HasSuffix(filename, ".html") {
+		contentType = "text/html; charset=utf-8"
+	} else if strings.HasSuffix(filename, ".txt") {
+		contentType = "text/plain; charset=utf-8"
+	} else {
+		log.Fatalf("Unknown ext: %s", filename)
+	}
+	ret, ok := public.StaticFiles[filename]
+	if !ok {
+		content, err := ioutil.ReadFile(static + "/" + filename)
+		util.Check(err)
+		ret = string(content)
+	}
+	w.Header().Set("Content-Type", contentType)
+	w.Write([]byte(ret))
+
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
@@ -41,6 +69,8 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 		util.RespText(w, util.Version)
 	} else if r.Method == "POST" && r.URL.Path == "/api/command" {
 		HandleCommand(w, r)
+	} else if r.Method == "GET" && strings.HasPrefix(r.URL.Path, "/public") {
+		HandleStatic(w, r)
 	} else if r.Method == "GET" && r.URL.Path == "/" {
 		HandleIndex(w, r)
 	} else {

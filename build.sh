@@ -4,6 +4,23 @@ cmd_main() {
   go run main.go "$@"
 }
 
+_static_gen() {
+  set +x
+  echo "package public"
+  echo "func init() {"
+  ls guest/public | grep -v "\.go$" | while read k; do
+    echo "StaticFiles[\"$k\"] = \`$(cat "guest/public/$k")\`"
+  done
+  echo "}"
+  set -x
+}
+
+cmd_build() {
+  _static_gen > guest/public/gen_staticfiles.go
+  mkdir -p target
+  go build -o target/desolation
+}
+
 cmd_test() {
   go test "$@"
 }

@@ -1,3 +1,3 @@
 package public
 
-var staticfiles = map[string]string{}
+var StaticFiles = map[string]string{}
