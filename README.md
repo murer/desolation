@@ -11,7 +11,7 @@ With desolation you can create a connection beteween the remote/guest and the ho
 ssh -O 'CommandProxy desolation guest %h %p' -g -D 5005 -R 5006 host command
 ```
 
-Yet on guest, open a browser to be operated by the host on desolation service: http://localhost:5010/
+Yet on guest, open a browser to be operated by the host: http://localhost:5010/
 
 You should see a initial qrcode on top of a input text.
 
