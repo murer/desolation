@@ -20,6 +20,6 @@ func TimeRetryCreate(duration int64) *TimeRetry {
 
 func (me *TimeRetry) Expired() bool {
 	now := time.Now().Unix()
-	log.Printf("test: %d, %d", now, me.Expires)
+	log.Printf("test: now: %d - expires: %d = %d", now, me.Expires, now-me.Expires)
 	return now >= me.Expires
 }
