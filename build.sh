@@ -16,9 +16,24 @@ _static_gen() {
 }
 
 cmd_build() {
-  _static_gen > guest/public/gen_staticfiles.go
-  mkdir -p target
-  go build -o target/desolation
+  desolation_goos="${1?'use: linux, darwin or windows'}"
+  desolation_goarch="${2:-"amd64"}"
+  desolation_ext=""
+  if [[ "x$desolation_goos" == "xwindows" ]]; then desolation_ext=".exe"; fi
+  desolation_ldflags="-s -w -extldflags '-static'"
+  mkdir -p build
+  CGO_ENABLED="0" GOOS="$desolation_goos" GOARCH="$desolation_goarch" \
+    go build -a -trimpath -ldflags "$desolation_ldflags" \
+      -installsuffix cgo -tags netgo -mod mod \
+      -o "build/desolation-$desolation_goos-${desolation_goarch}${desolation_ext}" .
+  du -hs "build/desolation-$desolation_goos-${desolation_goarch}${desolation_ext}"
+}
+
+cmd_build_all() {
+  rm -rf build
+  cmd_build linux
+  cmd_build darwin
+  cmd_build windows
 }
 
 cmd_test() {
