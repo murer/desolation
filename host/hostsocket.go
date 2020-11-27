@@ -60,6 +60,9 @@ func SocketRead() []byte {
 }
 
 func SocketWrite(data []byte) {
+	if len(data) == 0 {
+		return
+	}
 	n, err := conn.Write(data)
 	util.Check(err)
 	if n != len(data) {
