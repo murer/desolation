@@ -7,7 +7,6 @@ go:
 script:
   - ./ci.sh script
 
-
 deploy:
   - provider: releases
     overwrite: true
