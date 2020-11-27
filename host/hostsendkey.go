@@ -30,7 +30,7 @@ func HostSendMsg(msg *message.Message) {
 	log.Printf("encoded: %s", encoded)
 	array := strings.Split(encoded, "")
 	for i := 0; i < len(array); i++ {
-		if array[i] == "" {
+		if array[i] == "-" {
 			array[i] = "minus"
 		} else if array[i] == "_" {
 			array[i] = "underscore"
