@@ -4,7 +4,7 @@ USER root
 
 RUN apt-get -y update
 RUN apt-get -y install zbar-tools xdotool imagemagick
-RUN apt-get -y install git wget xauth net-tools dnsutils inetutils-syslogd vim curl nmap
+RUN apt-get -y install git wget xauth net-tools dnsutils inetutils-syslogd vim curl nmap iputils-ping
 RUN apt-get -y install openssh-server
 RUN apt-get -y install build-essential
 
