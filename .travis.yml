@@ -6,40 +6,26 @@ go:
 
 script:
   - go test -v ./...
-  
 
-# deploy:
-#   - provider: releases
-#     overwrite: true
-#     draft: false
-#     prerelease: true
-#     file: target/iso/*
-#     edge: true
-#     on:
-#       tags: true
-#       condition: $TRAVIS_TAG == edge
 
-#   - provider: releases
-#     overwrite: false
-#     draft: false
-#     prerelease: false
-#     file: target/iso/*
-#     edge: true
-#     on:
-#       tags: true
-#       condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
+deploy:
+  - provider: releases
+    overwrite: true
+    draft: false
+    prerelease: true
+    file: build/*
+    edge: true
+    on:
+      tags: true
+      condition: $TRAVIS_TAG == edge
 
-#   - provider: script
-#     script: ./ci/ci.sh docker_deploy
-#     edge: true
-#     on:
-#       tags: true
-#       condition: $TRAVIS_TAG == edge
-
-#   - provider: script
-#     script: ./ci/ci.sh docker_deploy latest
-#     edge: true
-#     on:
-#       tags: true
-#       condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
+  - provider: releases
+    overwrite: false
+    draft: false
+    prerelease: false
+    file: build/*
+    edge: true
+    on:
+      tags: true
+      condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
 
