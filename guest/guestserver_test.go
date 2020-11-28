@@ -128,7 +128,7 @@ func TestCommandInit(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := message.Create(message.OpInit, 7, []byte{})
+	msg := message.Create(message.OpInit, 1, []byte{})
 	code := msg.Encode()
 	log.Printf("init code: %s", code)
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(code)))
@@ -137,7 +137,7 @@ func TestCommandInit(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, uint64(7), rmsg.Rid)
+	assert.Equal(t, uint64(1), rmsg.Rid)
 	m := rmsg.PayloadMap()
 	assert.Equal(t, "127.0.0.1", m["host"])
 	assert.Equal(t, "22", m["port"])

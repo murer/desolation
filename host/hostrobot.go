@@ -19,10 +19,10 @@ func nRid() uint64 {
 func HostCommand(msg *message.Message) *message.Message {
 	rid := nRid()
 	msg.Rid = rid
-	log.Printf("Sent: %v", msg)
+	log.Printf("Sent: %s", msg.Basic())
 	HostSendMsg(msg)
 	ret := CaptureRid(rid)
-	log.Printf("Received: %v", ret)
+	log.Printf("Received: %s", ret.Basic())
 	return ret
 }
 

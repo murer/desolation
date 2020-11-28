@@ -52,7 +52,6 @@ func Capture() *message.Message {
 	img := screenshot()
 	text := parseQRCode(img)
 	if text == "" {
-		log.Printf("x")
 		return message.Create(message.OpNoop, 0, []byte{})
 	}
 	return message.Decode(text)
@@ -68,6 +67,7 @@ func CaptureRid(rid uint64) *message.Message {
 		if retries.Expired() {
 			log.Panicf("Timeout waiting for qrcode reply: %d", rid)
 		}
+		log.Printf("Current: %s", msg.Basic())
 		time.Sleep(100 * time.Millisecond)
 	}
 }

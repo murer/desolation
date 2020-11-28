@@ -1,6 +1,6 @@
 (function ($) {
 
-    function generateResp(obj) {
+    function generateResp(text) {
         // {"Name":"echo","Payload":"aaa"}
         var target = $('.msg-output-panel')
         target.html('')
@@ -23,7 +23,7 @@
         var input = new qr.Input();
         input.dataType = input.DATA_TYPE.TEXT;
         input.data = {
-            "text": JSON.stringify(obj)
+            "text": text
         };
 
         var matrix = new qr.Matrix(input, code);
@@ -55,7 +55,7 @@
     })
 
     $(window).ready(function() {
-        $('.msg-input').val('AgAAAAAAAAAHAAA=')
+        $('.msg-input').val('AgAAAAAAAAABAAA')
         $('form').submit()
     })
 

@@ -8,5 +8,9 @@ import (
 )
 
 func TestDecode(t *testing.T) {
-	assert.Equal(t, "eyJOYW1lIjoiZWNobyIsIkhlYWRlcnMiOnsicmlkIjoiMiJ9LCJQYXlsb2FkIjoiY2hlY2t0ZXh0In0=", util.B64Enc(util.B64Dec("eyJOYW1lIjoiZWNobyIsIkhlYWRlcnMiOnsicmlkIjoiMiJ9LCJQYXlsb2FkIjoiY2hlY2t0ZXh0In0=")))
+	//str := "dBU/s+c="
+	str := "dBU_s-c"
+	//assert.Equal(t, 0, len(str)%4)
+	decoded := util.B64Dec(str)
+	assert.Equal(t, str, util.B64Enc(decoded))
 }
