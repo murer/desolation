@@ -8,9 +8,9 @@ import (
 	"github.com/murer/desolation/message"
 )
 
-var currentRid uint64 = 10
+var currentRid uint32 = 10
 
-func nRid() uint64 {
+func nRid() uint32 {
 	ret := currentRid
 	currentRid = currentRid + 1
 	return ret

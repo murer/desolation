@@ -57,7 +57,7 @@ func Capture() *message.Message {
 	return message.Decode(text)
 }
 
-func CaptureRid(rid uint64) *message.Message {
+func CaptureRid(rid uint32) *message.Message {
 	retries := util.TimeRetryCreate(10)
 	for {
 		msg := Capture()

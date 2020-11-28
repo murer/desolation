@@ -20,7 +20,7 @@ const OpNoop uint8 = 7
 
 type Message struct {
 	Op      uint8
-	Rid     uint64
+	Rid     uint32
 	Payload []byte
 }
 
@@ -38,7 +38,7 @@ func (me *Message) PayloadMap() map[string]string {
 	return ret
 }
 
-func Create(op uint8, rid uint64, payload []byte) *Message {
+func Create(op uint8, rid uint32, payload []byte) *Message {
 	return &Message{
 		Op:      op,
 		Rid:     rid,
@@ -46,11 +46,11 @@ func Create(op uint8, rid uint64, payload []byte) *Message {
 	}
 }
 
-func CreateString(op uint8, rid uint64, str string) *Message {
+func CreateString(op uint8, rid uint32, str string) *Message {
 	return Create(op, rid, []byte(str))
 }
 
-func CreateMap(op uint8, rid uint64, params map[string]string) *Message {
+func CreateMap(op uint8, rid uint32, params map[string]string) *Message {
 	str, err := json.Marshal(params)
 	util.Check(err)
 	return Create(op, rid, str)

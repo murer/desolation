@@ -55,7 +55,7 @@
     })
 
     $(window).ready(function() {
-        $('.msg-input').val('AgAAAAAAAAABAAA')
+        $('.msg-input').val('AgAAAAEAAA')
         $('form').submit()
     })
 

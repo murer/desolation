@@ -137,7 +137,7 @@ func TestCommandInit(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, uint64(1), rmsg.Rid)
+	assert.Equal(t, uint32(1), rmsg.Rid)
 	m := rmsg.PayloadMap()
 	assert.Equal(t, "127.0.0.1", m["host"])
 	assert.Equal(t, "22", m["port"])
