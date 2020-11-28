@@ -35,7 +35,7 @@ func TestUnknown(t *testing.T) {
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	assert.Equal(t, message.CreateUnknown(200), message.Decode(util.ReadAllString(resp.Body)))
 }
 
@@ -48,7 +48,7 @@ func TestEchoJson(t *testing.T) {
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	assert.Equal(t, msg, message.Decode(util.ReadAllString(resp.Body)))
 }
 
@@ -72,7 +72,7 @@ func TestCommandWrite(t *testing.T) {
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
 	assert.Equal(t, 5, rmsg.Rid)
@@ -92,7 +92,7 @@ func TestCommandRead(t *testing.T) {
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
 	assert.Equal(t, 6, rmsg.Rid)
@@ -113,7 +113,7 @@ func TestCommandCW(t *testing.T) {
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
 	assert.Equal(t, 7, rmsg.Rid)
@@ -131,7 +131,7 @@ func TestCommandInit(t *testing.T) {
 	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
 	assert.Equal(t, 7, rmsg.Rid)
