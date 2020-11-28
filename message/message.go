@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/murer/desolation/util"
 )
@@ -26,7 +25,7 @@ type Message struct {
 }
 
 func (me *Message) Basic() string {
-	return fmt.Sprintf("Message{%d,%d,%d}", me.Op, me.Rid, len(me.Payload))
+	return fmt.Sprintf("[Message %d %d %d]", me.Op, me.Rid, len(me.Payload))
 }
 
 func (me *Message) PayloadString() string {
@@ -73,7 +72,6 @@ func (me *Message) Encode() string {
 }
 
 func Decode(code string) *Message {
-	log.Printf("DEBUG Decode: %s", code)
 	data := util.B64Dec(code)
 	ret := &Message{}
 	buf := bytes.NewBuffer(data)

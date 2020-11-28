@@ -94,6 +94,7 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 
 func HandleCommand(w http.ResponseWriter, r *http.Request) {
 	msg := messageExtract(r)
+	log.Printf("Received: %s", msg.Basic())
 	var ret *message.Message
 	if msg.Op == message.OpEcho {
 		ret = msg
@@ -112,6 +113,7 @@ func HandleCommand(w http.ResponseWriter, r *http.Request) {
 		ret = message.Create(message.OpUnknown, 0, []byte{})
 	}
 	ret.Rid = msg.Rid
+	log.Printf("Sent: %s", ret.Basic())
 	respBody := ret.Encode()
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Write([]byte(respBody))

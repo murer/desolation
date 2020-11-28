@@ -2,7 +2,6 @@ package host
 
 import (
 	"context"
-	"log"
 	"os/exec"
 	"strings"
 	"time"
@@ -26,7 +25,6 @@ func HostSendKeys(keys []string) {
 
 func HostSendMsg(msg *message.Message) {
 	encoded := msg.Encode()
-	log.Printf("encoded: %s", encoded)
 	array := strings.Split(encoded, "")
 	for i := 0; i < len(array); i++ {
 		if array[i] == "-" {

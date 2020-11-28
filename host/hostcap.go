@@ -67,7 +67,6 @@ func CaptureRid(rid uint64) *message.Message {
 		if retries.Expired() {
 			log.Panicf("Timeout waiting for qrcode reply: %d", rid)
 		}
-		log.Printf("Want: %d, Current: %s", rid, msg.Basic())
 		time.Sleep(100 * time.Millisecond)
 	}
 }
