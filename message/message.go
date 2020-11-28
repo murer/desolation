@@ -24,6 +24,10 @@ type Message struct {
 	Payload []byte
 }
 
+func (me *Message) PayloadString() string {
+	return string(me.Payload)
+}
+
 func (me *Message) PayloadMap() map[string]string {
 	ret := map[string]string{}
 	json.Unmarshal(me.Payload, &ret)

@@ -4,23 +4,22 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/murer/desolation/message"
 	"github.com/murer/desolation/util"
 )
 
-var currentRid int64 = 1
+var currentRid uint64 = 10
 
-func nRid() string {
+func nRid() uint64 {
 	ret := currentRid
 	currentRid = currentRid + 1
-	return strconv.FormatInt(ret, 10)
+	return ret
 }
 
 func HostCommand(msg *message.Message) *message.Message {
 	rid := nRid()
-	msg.Headers["rid"] = rid
+	msg.Rid = rid
 	log.Printf("Sent: %v", msg)
 	HostSendMsg(msg)
 	ret := CaptureRid(rid)
@@ -30,19 +29,15 @@ func HostCommand(msg *message.Message) *message.Message {
 
 func checkConn() {
 	rid := nRid()
-	msg := &message.Message{
-		Name:    "echo",
-		Headers: map[string]string{"rid": rid},
-		Payload: "checktext",
-	}
+	msg := message.CreateString(message.OpEcho, rid, "checktext")
 	msg = HostCommand(msg)
-	if msg.Payload != "checktext" {
+	if msg.PayloadString() != "checktext" {
 		log.Fatalf("Wrong: %v", msg)
 	}
 }
 
 func Start() {
-	msg := CaptureRid("init")
+	msg := CaptureRid(1)
 	log.Printf("Init: %v", msg)
 	checkConn()
 
@@ -79,24 +74,19 @@ func hostDataSend() {
 }
 
 func hostDataReceived() bool {
-	msg := HostCommand(&message.Message{
-		Name:    "read",
-		Headers: map[string]string{},
-		Payload: "",
-	})
+	msg := HostCommand(message.Create(message.OpRead, 0, []byte{}))
 	if msg == nil {
 		return false
 	}
-	if msg.Name != "ok" {
+	if msg.Op != message.OpOk {
 		log.Panicf("communication error: %v", msg)
 	}
-	data := util.B64Dec(msg.Payload)
-	SocketWrite(data)
+	SocketWrite(msg.Payload)
 	return true
 }
 
 func handleResponse(msg *message.Message) {
-	if msg.Name == "init" {
+	if msg.Op == message.OpInit {
 		handleResponseInit(msg)
 	} else {
 		log.Panicf("Unknown: %v", msg)
@@ -104,7 +94,8 @@ func handleResponse(msg *message.Message) {
 }
 
 func handleResponseInit(msg *message.Message) {
-	host := msg.Get("host")
-	port := msg.Get("port")
+	m := msg.PayloadMap()
+	host := m["host"]
+	port := m["port"]
 	SocketConnect(fmt.Sprintf("%s:%s", host, port))
 }
