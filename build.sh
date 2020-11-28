@@ -15,7 +15,12 @@ _static_gen() {
   set -x
 }
 
+cmd_static_gen() {
+  _static_gen > guest/public/gen_public.go
+}
+
 cmd_build() {
+  cmd_static_gen
   desolation_goos="${1?'use: linux, darwin or windows'}"
   desolation_goarch="${2:-"amd64"}"
   desolation_ext=""

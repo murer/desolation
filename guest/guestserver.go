@@ -27,7 +27,7 @@ func Handler() http.Handler {
 	static = "guest/public"
 	if !util.FileExists(static) {
 		static = "public"
-		if !util.FileExists(static) {
+		if !util.FileExists(static) && len(public.StaticFiles) == 0 {
 			log.Panicf("static dir not found: %s", static)
 		}
 	}
@@ -38,8 +38,8 @@ func Handler() http.Handler {
 	return mux
 }
 
-func HandleStatic(w http.ResponseWriter, r *http.Request) {
-	filename := filepath.Base(r.URL.Path)
+func HandleStatic(w http.ResponseWriter, r *http.Request, url string) {
+	filename := filepath.Base(url)
 	contentType := ""
 	if strings.HasSuffix(filename, ".js") {
 		contentType = "application/json"
@@ -72,9 +72,9 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" && r.URL.Path == "/api/command" {
 		HandleCommand(w, r)
 	} else if r.Method == "GET" && strings.HasPrefix(r.URL.Path, "/public") {
-		HandleStatic(w, r)
+		HandleStatic(w, r, r.URL.Path)
 	} else if r.Method == "GET" && r.URL.Path == "/" {
-		HandleIndex(w, r)
+		HandleStatic(w, r, "/public/index.html")
 	} else {
 		http.NotFound(w, r)
 	}
@@ -83,13 +83,6 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 func messageExtract(r *http.Request) *message.Message {
 	reqBody := util.ReadAllString(r.Body)
 	return message.Decode(reqBody)
-}
-
-func HandleIndex(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadFile(static + "/index.html")
-	util.Check(err)
-	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
-	w.Write(body)
 }
 
 func HandleCommand(w http.ResponseWriter, r *http.Request) {
