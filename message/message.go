@@ -16,6 +16,7 @@ const OpWrite uint8 = 3
 const OpRead uint8 = 4
 const OpCloseWrite uint8 = 5
 const OpUnknown uint8 = 6
+const OpNoop uint8 = 7
 
 type Message struct {
 	Op      uint8

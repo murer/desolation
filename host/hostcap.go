@@ -53,20 +53,16 @@ func Capture() *message.Message {
 	text := parseQRCode(img)
 	if text == "" {
 		log.Printf("x")
-		return &message.Message{
-			Name:    "nocode",
-			Headers: map[string]string{"rid": "nocode"},
-			Payload: "",
-		}
+		return message.Create(message.OpNoop, 0, []byte{})
 	}
 	return message.Decode(text)
 }
 
-func CaptureRid(rid string) *message.Message {
+func CaptureRid(rid uint64) *message.Message {
 	retries := util.TimeRetryCreate(10)
 	for {
 		msg := Capture()
-		if msg != nil && msg.Get("rid") == rid {
+		if msg != nil && msg.Rid == rid {
 			return msg
 		}
 		if retries.Expired() {
