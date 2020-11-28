@@ -59,4 +59,6 @@
         $('form').submit()
     })
 
+    window.generateResp = generateResp
+
 })(jQuery)
