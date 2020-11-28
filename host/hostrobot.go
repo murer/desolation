@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/murer/desolation/message"
-	"github.com/murer/desolation/util"
 )
 
 var currentRid uint64 = 10
@@ -41,8 +40,9 @@ func Start() {
 	log.Printf("Init: %v", msg)
 	checkConn()
 
-	host := msg.Get("host")
-	port := msg.Get("port")
+	m := msg.PayloadMap()
+	host := m["host"]
+	port := m["port"]
 	SocketConnect(fmt.Sprintf("%s:%s", host, port))
 
 	for {
@@ -54,20 +54,12 @@ func Start() {
 func hostDataSend() {
 	data := SocketRead()
 	if data == nil {
-		HostCommand(&message.Message{
-			Name:    "cw",
-			Headers: map[string]string{},
-			Payload: "",
-		})
+		HostCommand(message.Create(message.OpCloseWrite, 0, []byte{}))
 		os.Exit(0)
 	}
 	if len(data) > 0 {
-		msg := HostCommand(&message.Message{
-			Name:    "write",
-			Headers: map[string]string{},
-			Payload: util.B64Enc(data),
-		})
-		if msg.Name != "ok" {
+		msg := HostCommand(message.Create(message.OpWrite, 0, data))
+		if msg.Op != message.OpOk {
 			log.Panicf("communication error: %v", msg)
 		}
 	}
