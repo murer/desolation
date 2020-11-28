@@ -45,6 +45,7 @@ cmd_build_all() {
 }
 
 cmd_test() {
+  go clean -testcache
   go test "$@"
 }
 
