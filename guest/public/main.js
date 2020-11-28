@@ -43,12 +43,12 @@
         var msgInput = $(this).find('[name=msg]').val()
         $.ajax({
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             url: 'api/command',
             data: msgInput,
             contentType: 'text/plain',
             success: function (ret) {
-                $('.msg-output-text').val(JSON.stringify(ret, null, 4))
+                $('.msg-output-text').val(ret)
                 generateResp(ret)
             }
         })

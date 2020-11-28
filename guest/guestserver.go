@@ -50,7 +50,9 @@ func HandleStatic(w http.ResponseWriter, r *http.Request) {
 	} else if strings.HasSuffix(filename, ".txt") {
 		contentType = "text/plain; charset=utf-8"
 	} else {
-		log.Fatalf("Unknown ext: %s", filename)
+		log.Printf("Unknown ext: %s", filename)
+		http.NotFound(w, r)
+		return
 	}
 	ret, ok := public.StaticFiles[filename]
 	if !ok {
@@ -64,7 +66,7 @@ func HandleStatic(w http.ResponseWriter, r *http.Request) {
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
-	//log.Printf("Access: %s %s %s", r.RemoteAddr, r.Method, r.URL)
+	log.Printf("Access: %s %s %s", r.RemoteAddr, r.Method, r.URL)
 	if r.Method == "GET" && r.URL.Path == "/api/version.txt" {
 		util.RespText(w, util.Version)
 	} else if r.Method == "POST" && r.URL.Path == "/api/command" {
