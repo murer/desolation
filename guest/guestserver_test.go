@@ -31,16 +31,12 @@ func TestUnknown(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := &message.Message{
-		Name:    "hfewi",
-		Headers: map[string]string{"foo": "1", "bar": "2"},
-		Payload: "bXVyZXI=",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "application/json", bytes.NewReader([]byte(message.Encode(msg))))
+	msg := message.CreateString(200, 4, "murer")
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
-	assert.Equal(t, &message.Message{Name: "unknown", Headers: map[string]string{}, Payload: ""}, message.Decode(util.ReadAllString(resp.Body)))
+	assert.Equal(t, message.CreateUnknown(200), message.Decode(util.ReadAllString(resp.Body)))
 }
 
 func TestEchoJson(t *testing.T) {
@@ -48,29 +44,8 @@ func TestEchoJson(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := &message.Message{
-		Name:    "echo",
-		Headers: map[string]string{"foo": "1", "bar": "2"},
-		Payload: "bXVyZXI=",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "application/json", bytes.NewReader([]byte(message.Encode(msg))))
-	util.Check(err)
-	assert.Equal(t, 200, resp.StatusCode)
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
-	assert.Equal(t, msg, message.Decode(util.ReadAllString(resp.Body)))
-}
-
-func TestEchoB64(t *testing.T) {
-	server := httptest.NewServer(http.Handler(guest.Handler()))
-	defer server.Close()
-	t.Logf("URL: %s", server.URL)
-
-	msg := &message.Message{
-		Name:    "echo",
-		Headers: map[string]string{"foo": "1", "bar": "2"},
-		Payload: "bXVyZXI=",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(util.B64Enc([]byte(message.Encode(msg))))))
+	msg := message.CreateString(message.OpEcho, 5, "murer")
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
@@ -93,19 +68,15 @@ func TestCommandWrite(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := &message.Message{
-		Name:    "write",
-		Headers: map[string]string{"rid": "a"},
-		Payload: "bXVyZXI=",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "application/json", bytes.NewReader([]byte(message.Encode(msg))))
+	msg := message.CreateString(message.OpWrite, 5, "murer")
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
-	assert.Equal(t, "ok", rmsg.Name)
-	assert.Equal(t, "a", rmsg.Get("rid"))
-	assert.Equal(t, "", rmsg.Payload)
+	assert.Equal(t, message.OpOk, rmsg.Op)
+	assert.Equal(t, 5, rmsg.Rid)
+	assert.Equal(t, []byte{}, rmsg.Payload)
 }
 
 func TestCommandRead(t *testing.T) {
@@ -117,19 +88,15 @@ func TestCommandRead(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := &message.Message{
-		Name:    "read",
-		Headers: map[string]string{"rid": "a"},
-		Payload: "",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "application/json", bytes.NewReader([]byte(message.Encode(msg))))
+	msg := message.CreateString(message.OpRead, 6, "test")
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
-	assert.Equal(t, "ok", rmsg.Name)
-	assert.Equal(t, "a", rmsg.Get("rid"))
-	assert.Equal(t, "test", string(util.B64Dec(rmsg.Payload)))
+	assert.Equal(t, message.OpOk, rmsg.Op)
+	assert.Equal(t, 6, rmsg.Rid)
+	assert.Equal(t, "test", string(rmsg.Payload))
 }
 
 func TestCommandCW(t *testing.T) {
@@ -142,19 +109,15 @@ func TestCommandCW(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := &message.Message{
-		Name:    "cw",
-		Headers: map[string]string{"rid": "a"},
-		Payload: "",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "application/json", bytes.NewReader([]byte(message.Encode(msg))))
+	msg := message.Create(message.OpCloseWrite, 7, []byte{})
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
-	assert.Equal(t, "ok", rmsg.Name)
-	assert.Equal(t, "a", rmsg.Get("rid"))
-	assert.Equal(t, "", string(util.B64Dec(rmsg.Payload)))
+	assert.Equal(t, message.OpOk, rmsg.Op)
+	assert.Equal(t, 7, rmsg.Rid)
+	assert.Equal(t, "test", string(rmsg.Payload))
 
 	assert.Equal(t, "", util.ReadAllString(pin))
 }
@@ -164,19 +127,15 @@ func TestCommandInit(t *testing.T) {
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
 
-	msg := &message.Message{
-		Name:    "init",
-		Headers: map[string]string{"rid": "a"},
-		Payload: "",
-	}
-	resp, err := http.Post(server.URL+"/api/command", "application/json", bytes.NewReader([]byte(message.Encode(msg))))
+	msg := message.Create(message.OpInit, 7, []byte{})
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
-	assert.Equal(t, "ok", rmsg.Name)
-	assert.Equal(t, "a", rmsg.Get("rid"))
-	assert.Equal(t, "127.0.0.1", rmsg.Get("host"))
-	assert.Equal(t, "22", rmsg.Get("port"))
-	assert.Equal(t, "", string(util.B64Dec(rmsg.Payload)))
+	assert.Equal(t, message.OpOk, rmsg.Op)
+	assert.Equal(t, 7, rmsg.Rid)
+	m := rmsg.PayloadMap()
+	assert.Equal(t, "127.0.0.1", m["host"])
+	assert.Equal(t, "22", m["port"])
 }

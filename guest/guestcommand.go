@@ -35,9 +35,9 @@ func DescError(err error) int {
 }
 
 func HandleCommandWrite(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
-	payload := m.PayloadDecode()
+	payload := m.Payload
 	Out.Write(payload)
-	return &message.Message{Name: "ok", Headers: map[string]string{}, Payload: ""}
+	return message.Create(message.OpOk, 0, []byte{})
 }
 
 func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
@@ -53,10 +53,10 @@ func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Reques
 		util.Check(err)
 	}
 	buf = buf[:n]
-	return &message.Message{Name: "ok", Headers: map[string]string{}, Payload: util.B64Enc(buf)}
+	return message.Create(message.OpOk, 0, buf)
 }
 
 func HandleCommandCW(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
 	Out.Close()
-	return &message.Message{Name: "ok", Headers: map[string]string{}, Payload: ""}
+	return message.Create(message.OpOk, 0, []byte{})
 }

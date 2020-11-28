@@ -3,6 +3,7 @@ package util
 import (
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -42,4 +43,14 @@ func FileExists(path string) bool {
 	}
 	Check(err)
 	return true
+}
+
+func ReadFully(r io.Reader, n int) []byte {
+	buf := make([]byte, n)
+	nr, err := io.ReadAtLeast(r, buf, n)
+	Check(err)
+	if nr != n {
+		log.Panicf("wrong %d, expected %d", nr, n)
+	}
+	return buf
 }
