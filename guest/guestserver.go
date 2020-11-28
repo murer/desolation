@@ -96,27 +96,24 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 func HandleCommand(w http.ResponseWriter, r *http.Request) {
 	msg := messageExtract(r)
 	var ret *message.Message
-	if msg.Name == "echo" {
+	if msg.Op == message.OpEcho {
 		ret = msg
-	} else if msg.Name == "write" {
+	} else if msg.Op == message.OpWrite {
 		ret = HandleCommandWrite(msg, w, r)
-	} else if msg.Name == "read" {
+	} else if msg.Op == message.OpRead {
 		ret = HandleCommandRead(msg, w, r)
 		if ret == nil {
 			os.Exit(0)
 		}
-	} else if msg.Name == "cw" {
+	} else if msg.Op == message.OpCloseWrite {
 		ret = HandleCommandCW(msg, w, r)
-	} else if msg.Name == "init" {
+	} else if msg.Op == message.OpInit {
 		ret = HandleCommandInit(msg, w, r)
 	} else {
-		ret = &message.Message{Name: "unknown", Headers: map[string]string{}, Payload: ""}
+		ret = message.Create(message.OpUnknown, 0, []byte{})
 	}
-	rid, exists := msg.Headers["rid"]
-	if exists {
-		ret.Headers["rid"] = rid
-	}
-	respBody := message.Encode(ret)
-	w.Header().Set("Content-Type", "application/json")
+	ret.Rid = msg.Rid
+	respBody := ret.Encode()
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Write([]byte(respBody))
 }
