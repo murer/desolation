@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 cmd_script() {
-  ./build.sh test -v ./...
+  ./build.sh test ./...
   ./build.sh build_all
 }
 
