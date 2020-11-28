@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -75,7 +76,7 @@ func TestCommandWrite(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, 5, rmsg.Rid)
+	assert.Equal(t, uint64(5), rmsg.Rid)
 	assert.Equal(t, []byte{}, rmsg.Payload)
 }
 
@@ -95,7 +96,7 @@ func TestCommandRead(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, 6, rmsg.Rid)
+	assert.Equal(t, uint64(6), rmsg.Rid)
 	assert.Equal(t, "test", string(rmsg.Payload))
 }
 
@@ -116,7 +117,7 @@ func TestCommandCW(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, 7, rmsg.Rid)
+	assert.Equal(t, uint64(7), rmsg.Rid)
 	assert.Equal(t, "test", string(rmsg.Payload))
 
 	assert.Equal(t, "", util.ReadAllString(pin))
@@ -128,13 +129,15 @@ func TestCommandInit(t *testing.T) {
 	t.Logf("URL: %s", server.URL)
 
 	msg := message.Create(message.OpInit, 7, []byte{})
-	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
+	code := msg.Encode()
+	log.Printf("init code: %s", code)
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(code)))
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, 7, rmsg.Rid)
+	assert.Equal(t, uint64(7), rmsg.Rid)
 	m := rmsg.PayloadMap()
 	assert.Equal(t, "127.0.0.1", m["host"])
 	assert.Equal(t, "22", m["port"])

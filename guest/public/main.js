@@ -55,7 +55,7 @@
     })
 
     $(window).ready(function() {
-        $('.msg-input').val('eyJOYW1lIjoiaW5pdCIsIkhlYWRlcnMiOnsicmlkIjoiaW5pdCJ9fQ==')
+        $('.msg-input').val('AgAAAAAAAAAHAAA=')
         $('form').submit()
     })
 
