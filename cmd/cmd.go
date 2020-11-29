@@ -72,11 +72,15 @@ func configHost() {
 				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
 				time.Sleep(time.Duration(sleep) * time.Second)
 			}
+			td, err := cmd.PersistentFlags().GetString("td")
+			util.Check(err)
+			host.SendKeyDelay = td
 			host.Start()
 			return nil
 		},
 	}
 	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
+	cmd.PersistentFlags().String("td", "10", "Send Key Delay in millis")
 	rootCmd.AddCommand(cmd)
 
 }

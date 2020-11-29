@@ -14,10 +14,12 @@ import (
 // xdotool windowactivate --sync 31457295 key l s Return
 // xdotool key a b c Return
 
+var SendKeyDelay = "10"
+
 func HostSendKeys(keys []string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60000*time.Millisecond)
 	defer cancel()
-	args := append([]string{"key", "--delay", "10"}, keys...)
+	args := append([]string{"key", "--delay", SendKeyDelay}, keys...)
 	log.Printf("cmd: %s", strings.Join(args, " "))
 	cmd := exec.CommandContext(ctx, "xdotool", args...)
 	cmd.Start()
