@@ -2,7 +2,6 @@ package host
 
 import (
 	"context"
-	"log"
 	"os/exec"
 	"strings"
 	"time"
@@ -20,7 +19,7 @@ func HostSendKeys(keys []string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60000*time.Millisecond)
 	defer cancel()
 	args := append([]string{"key", "--delay", SendKeyDelay}, keys...)
-	log.Printf("cmd: %s", strings.Join(args, " "))
+	// log.Printf("cmd: %s", strings.Join(args, " "))
 	cmd := exec.CommandContext(ctx, "xdotool", args...)
 	cmd.Start()
 	err := cmd.Wait()
