@@ -6,7 +6,7 @@ import (
 
 func TestCapture(t *testing.T) {
 	// msg := host.Capture()
-	// assert.Equal(t, &message.Message{Name: "nocode", Headers: map[string]string(nil), Payload: ""}, msg)
+	// assert.Equal(t, message.Create(message.OpEcho, 1, []byte{}), msg)
 }
 
 func TestCaptureRid(t *testing.T) {

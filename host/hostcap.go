@@ -12,7 +12,7 @@ import (
 )
 
 func screenshot() []byte {
-	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), 10000*time.Millisecond)
 	defer cancel()
 	out, err := exec.CommandContext(ctx, "import", "-window", "root", "png:-").Output()
 	util.Check(err)
@@ -67,6 +67,6 @@ func CaptureRid(rid uint32) *message.Message {
 		if retries.Expired() {
 			log.Panicf("Timeout waiting for qrcode reply: %d", rid)
 		}
-		//time.Sleep(100 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 	}
 }
