@@ -80,7 +80,7 @@ func configHost() {
 		},
 	}
 	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
-	cmd.PersistentFlags().String("td", "10", "Send Key Delay in millis")
+	cmd.PersistentFlags().String("td", host.SendKeyDelay, "Send Key Delay in millis")
 	rootCmd.AddCommand(cmd)
 
 }

@@ -58,7 +58,7 @@ func Capture() *message.Message {
 }
 
 func CaptureRid(rid uint32) *message.Message {
-	retries := util.TimeRetryCreate(10)
+	retries := util.TimeRetryCreate(60)
 	for {
 		msg := Capture()
 		if msg != nil && msg.Rid == rid {
