@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/murer/desolation/util"
 )
@@ -67,8 +68,9 @@ func (me *Message) Encode() string {
 	size := uint16(len(me.Payload))
 	binary.Write(&buf, binary.BigEndian, size)
 	buf.Write(me.Payload)
-	data := buf.Bytes()
-	return util.B64Enc(data)
+	checksum := util.Crc32(buf.Bytes())
+	binary.Write(&buf, binary.BigEndian, checksum)
+	return util.B64Enc(buf.Bytes())
 }
 
 func Decode(code string) *Message {
@@ -80,6 +82,13 @@ func Decode(code string) *Message {
 	var size uint16
 	binary.Read(buf, binary.BigEndian, &size)
 	ret.Payload = util.ReadFully(buf, int(size))
+	var checksum uint32
+	binary.Read(buf, binary.BigEndian, &checksum)
+	data = data[:len(data)-4]
+	msgchecksum := util.Crc32(data)
+	if msgchecksum != checksum {
+		log.Fatalf("Wrong checksum, expected: %x, but was: %x", checksum, msgchecksum)
+	}
 	return ret
 }
 

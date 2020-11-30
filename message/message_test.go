@@ -14,7 +14,7 @@ func TestMessage(t *testing.T) {
 	log.Printf("msg: %s", original.Basic())
 	assert.Equal(t, map[string]string{"x": "murer"}, original.PayloadMap())
 	code := original.Encode()
-	assert.Equal(t, "BAAAAAEADXsieCI6Im11cmVyIn0", code)
+	assert.Equal(t, "BAAAAAEADXsieCI6Im11cmVyIn0ej6o0", code)
 	msg := message.Decode(code)
 	assert.Equal(t, original, msg)
 }
