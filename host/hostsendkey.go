@@ -14,7 +14,7 @@ import (
 // xdotool windowactivate --sync 31457295 key l s Return
 // xdotool key a b c Return
 
-var SendKeyDelay = "10"
+var SendKeyDelay = "0"
 
 func HostSendKeys(keys []string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60000*time.Millisecond)
