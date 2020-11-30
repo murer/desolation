@@ -9,10 +9,10 @@ import (
 )
 
 func TestMessage(t *testing.T) {
-	original := message.CreateMap(message.OpRead, 1, map[string]string{"x": "murer"})
-	//original := message.Decode("aAAAAAsACWNoZWNrdGV4dKQf4s8")
+	// original := message.CreateMap(message.OpRead, 1, map[string]string{"x": "murer"})
+	original := message.Decode("AQAAABYAWGExAAAABG5vbmUAAAAEbm9uZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsBh4AAAAg2fdmBPDfKDrh4aDGRcgvUctBZHEsc-GBBJn0xPcc-BMAAAAAAAAH8yhK")
 	log.Printf("msg: %s", original.Basic())
-	assert.Equal(t, map[string]string{"x": "murer"}, original.PayloadMap())
+	assert.Equal(t, map[string]string{"x": "murer"}, original.Payload)
 	code := original.Encode()
 	assert.Equal(t, "BAAAAAEADXsieCI6Im11cmVyIn0ej6o0", code)
 	msg := message.Decode(code)
