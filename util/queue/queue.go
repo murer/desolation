@@ -12,7 +12,6 @@ type Queue struct {
 }
 
 func (q *Queue) Put(elements ...interface{}) {
-	log.Printf("PUT %#v", elements)
 	q.c.L.Lock()
 	defer q.c.L.Unlock()
 	for len(q.l) >= q.m {
@@ -63,10 +62,8 @@ func (q *Queue) WaitShift() interface{} {
 	log.Printf("Waiting shift ret")
 	ret := q.WaitShiftn(1)
 	if len(ret) == 0 {
-		log.Printf("Shift ret nil")
 		return nil
 	}
-	log.Printf("Shift ret %#v", ret)
 	return ret[0]
 }
 

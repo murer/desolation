@@ -8,10 +8,20 @@ import (
 
 	"github.com/murer/desolation/message"
 	"github.com/murer/desolation/util"
+	"github.com/murer/desolation/util/queue"
 )
 
-var Out io.WriteCloser = os.Stdout
-var In = util.ChannelReader(os.Stdin, 256)
+var Out io.WriteCloser
+var In *queue.Queue
+
+func GuestInOutInit() {
+	if In != nil {
+		log.Print("In and out are alreadt setted")
+		return
+	}
+	In = util.ChannelReader(os.Stdin, 256)
+	Out = os.Stdout
+}
 
 func HandleCommandWrite(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
 	payload := m.Payload

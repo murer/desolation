@@ -64,6 +64,7 @@ func TestStatic(t *testing.T) {
 }
 
 func TestCommandWrite(t *testing.T) {
+	guest.GuestInOutInit()
 	server := httptest.NewServer(http.Handler(guest.Handler()))
 	defer server.Close()
 	t.Logf("URL: %s", server.URL)
