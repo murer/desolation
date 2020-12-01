@@ -3,7 +3,6 @@ package guest_test
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -82,7 +81,7 @@ func TestCommandWrite(t *testing.T) {
 
 func TestCommandRead(t *testing.T) {
 	original := guest.In
-	guest.In = ioutil.NopCloser(bytes.NewReader([]byte("test")))
+	guest.In = util.ChannelReader(bytes.NewReader([]byte("test")), 256)
 	defer func() { guest.In = original }()
 
 	server := httptest.NewServer(http.Handler(guest.Handler()))
@@ -96,7 +95,7 @@ func TestCommandRead(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, uint64(6), rmsg.Rid)
+	assert.Equal(t, uint32(6), rmsg.Rid)
 	assert.Equal(t, "test", string(rmsg.Payload))
 }
 

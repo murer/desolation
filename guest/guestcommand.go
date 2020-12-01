@@ -5,14 +5,13 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/murer/desolation/message"
 	"github.com/murer/desolation/util"
 )
 
 var Out io.WriteCloser = os.Stdout
-var In io.ReadCloser = os.Stdin
+var In = util.ChannelReader(os.Stdin, 256)
 
 const DESC_ERR_NONE = 0
 const DESC_ERR_OTHER = 1
@@ -41,22 +40,14 @@ func HandleCommandWrite(m *message.Message, w http.ResponseWriter, r *http.Reque
 }
 
 func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
-	buf := make([]byte, 256)
-	log.Print("xxx1")
-	os.Stdin.SetReadDeadline(time.Now().Add(1 * time.Millisecond))
 	log.Print("xxx2")
-	n, err := os.Stdin.Read(buf)
+	tuple := <-In
 	log.Print("xxx3")
-	derr := DescError(err)
-	if derr == DESC_ERR_EOF {
+	if !tuple.Open {
 		log.Print("Stdin EOF...")
 		return nil
 	}
-	if derr != DESC_ERR_TIMEOUT {
-		util.Check(err)
-	}
-	buf = buf[:n]
-	return message.Create(message.OpOk, 0, buf)
+	return message.Create(message.OpOk, 0, tuple.Data)
 }
 
 func HandleCommandCW(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
