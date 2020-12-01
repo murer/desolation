@@ -1,7 +1,5 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/gopherjs/gopherjs v0.0.0-20190411002643-bd77b112433e
-github.com/gopherjs/gopherjs/js
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
 # github.com/pmezard/go-difflib v1.0.0
@@ -14,13 +12,5 @@ github.com/spf13/pflag
 # github.com/stretchr/testify v1.6.1
 ## explicit
 github.com/stretchr/testify/assert
-# github.com/therecipe/qt v0.0.0-20200904063919-c0c124a5770d
-## explicit
-github.com/therecipe/qt
-github.com/therecipe/qt/core
-github.com/therecipe/qt/gui
-github.com/therecipe/qt/internal
-github.com/therecipe/qt/interop/gow
-github.com/therecipe/qt/widgets
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 gopkg.in/yaml.v3

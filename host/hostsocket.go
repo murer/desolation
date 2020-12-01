@@ -69,3 +69,8 @@ func SocketWrite(data []byte) {
 		log.Panicf("Wrong len, should be: %d, was: %d", n, len(data))
 	}
 }
+
+func SocketReaderClose() {
+	log.Print("Closing connection")
+	conn.Close()
+}

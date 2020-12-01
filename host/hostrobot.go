@@ -65,16 +65,20 @@ func hostDataSend() {
 	}
 }
 
-func hostDataReceived() bool {
+func hostDataReceived() {
 	msg := HostCommand(message.Create(message.OpRead, 0, []byte{}))
 	if msg == nil {
-		return false
+		return
+	}
+	if msg.Op == message.OpReaderClosed {
+		SocketReaderClose()
+		return
 	}
 	if msg.Op != message.OpOk {
 		log.Panicf("communication error: %v", msg)
 	}
 	SocketWrite(msg.Payload)
-	return true
+	return
 }
 
 func handleResponse(msg *message.Message) {
