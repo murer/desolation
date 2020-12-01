@@ -11,40 +11,33 @@ import (
 
 func TestChannelReader(t *testing.T) {
 	r := bytes.NewReader([]byte("0123456789"))
-	cr := util.ChannelReader(r, 4)
+	q := util.ChannelReader(r, 4)
 
-	block := <-cr
-	assert.Equal(t, []byte{0x30, 0x31, 0x32, 0x33}, block.Data)
-	assert.Equal(t, true, block.Open)
+	log.Printf("f1")
+	n := q.WaitShift()
+	block, ok := n.([]byte)
+	assert.Equal(t, []byte{0x30, 0x31, 0x32, 0x33}, block)
+	assert.Equal(t, true, ok)
 
-	block = <-cr
-	assert.Equal(t, []byte{0x34, 0x35, 0x36, 0x37}, block.Data)
-	assert.Equal(t, true, block.Open)
+	log.Printf("f2")
+	n = q.WaitShift()
+	block, ok = n.([]byte)
+	assert.Equal(t, []byte{0x34, 0x35, 0x36, 0x37}, block)
+	assert.Equal(t, true, ok)
 
-	block = <-cr
-	assert.Equal(t, []byte{0x38, 0x39}, block.Data)
-	assert.Equal(t, true, block.Open)
+	log.Printf("f3")
+	n = q.WaitShift()
+	block, ok = n.([]byte)
+	assert.Equal(t, []byte{0x38, 0x39}, block)
+	assert.Equal(t, true, ok)
 
-	block = <-cr
-	assert.Nil(t, block.Data)
-	assert.Equal(t, false, block.Open)
+	log.Printf("f4")
+	n = q.WaitShift()
+	closed, ok := n.(string)
+	assert.Equal(t, "closed", closed)
+	assert.Equal(t, true, ok)
 
-	block = <-cr
-	assert.Nil(t, block.Data)
-	assert.Equal(t, false, block.Open)
-}
-
-func TestChannelReaderFor(t *testing.T) {
-	r := bytes.NewReader([]byte("0123456789"))
-	cr := util.ChannelReader(r, 4)
-	for elem := range cr {
-		log.Printf("x: %v", elem)
-	}
-	block := <-cr
-	assert.Nil(t, block.Data)
-	assert.Equal(t, false, block.Open)
-
-	block = <-cr
-	assert.Nil(t, block.Data)
-	assert.Equal(t, false, block.Open)
+	log.Printf("f5")
+	n = q.Shift()
+	assert.Nil(t, n)
 }

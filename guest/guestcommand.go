@@ -21,13 +21,20 @@ func HandleCommandWrite(m *message.Message, w http.ResponseWriter, r *http.Reque
 
 func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
 	log.Print("xxx2")
-	tuple := <-In
-	log.Print("xxx3")
-	if !tuple.Open {
-		log.Print("Stdin EOF...")
-		return nil
+	content := In.Shift()
+	if content == nil {
+		return message.Create(message.OpOk, 0, []byte{})
 	}
-	return message.Create(message.OpOk, 0, tuple.Data)
+	block, ok := content.([]byte)
+	if ok {
+		return message.Create(message.OpOk, 0, block)
+	}
+	closed, ok := content.(string)
+	if !ok || closed != "closed" {
+		log.Panicf("Wrong: %#v", content)
+	}
+	log.Print("Stdin EOF...")
+	return nil
 }
 
 func HandleCommandCW(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
