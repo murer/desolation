@@ -38,6 +38,8 @@ func Config() {
 
 	configHost()
 
+	configCap()
+
 }
 
 func gconf() {
@@ -81,6 +83,27 @@ func configHost() {
 	}
 	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
 	cmd.PersistentFlags().String("td", host.SendKeyDelay, "Send Key Delay in millis")
+	rootCmd.AddCommand(cmd)
+
+}
+
+func configCap() {
+	cmd := &cobra.Command{
+		Use:  "cap",
+		Args: cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			sleep, err := cmd.PersistentFlags().GetInt64("sleep")
+			util.Check(err)
+			if sleep > 0 {
+				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
+				time.Sleep(time.Duration(sleep) * time.Second)
+			}
+			msg := host.CaptureText()
+			fmt.Printf("%s", msg)
+			return nil
+		},
+	}
+	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
 	rootCmd.AddCommand(cmd)
 
 }

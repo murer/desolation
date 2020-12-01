@@ -41,6 +41,10 @@
     $('form').submit(function (evt) {
         evt.preventDefault()
         var msgInput = $(this).find('[name=msg]').val()
+        if (msgInput.indexOf(':') >= 0) {
+            generateResp(msgInput)
+            return
+        }
         $.ajax({
             type: 'POST',
             dataType: 'text',

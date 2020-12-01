@@ -48,9 +48,14 @@ func parseQRCode(img []byte) string {
 	return string(out)
 }
 
-func Capture() *message.Message {
+func CaptureText() string {
 	img := screenshot()
 	text := parseQRCode(img)
+	return text
+}
+
+func Capture() *message.Message {
+	text := CaptureText()
 	if text == "" {
 		return message.Create(message.OpNoop, 0, []byte{})
 	}
