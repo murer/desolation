@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -96,9 +95,6 @@ func HandleCommand(w http.ResponseWriter, r *http.Request) {
 		ret = HandleCommandWrite(msg, w, r)
 	} else if msg.Op == message.OpRead {
 		ret = HandleCommandRead(msg, w, r)
-		if ret == nil {
-			os.Exit(0)
-		}
 	} else if msg.Op == message.OpCloseWrite {
 		ret = HandleCommandCW(msg, w, r)
 	} else if msg.Op == message.OpInit {
