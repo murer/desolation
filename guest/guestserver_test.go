@@ -123,6 +123,21 @@ func TestCommandCW(t *testing.T) {
 	assert.Equal(t, "", util.ReadAllString(pin))
 }
 
+func TestCommandShow(t *testing.T) {
+	server := httptest.NewServer(http.Handler(guest.Handler()))
+	defer server.Close()
+	t.Logf("URL: %s", server.URL)
+
+	msg := message.Create(message.OpShow, 0, []byte("test"))
+	code := msg.Encode()
+	log.Printf("init code: %s", code)
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(code)))
+	util.Check(err)
+	assert.Equal(t, 200, resp.StatusCode)
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "test", util.ReadAllString(resp.Body))
+}
+
 func TestCommandInit(t *testing.T) {
 	server := httptest.NewServer(http.Handler(guest.Handler()))
 	defer server.Close()

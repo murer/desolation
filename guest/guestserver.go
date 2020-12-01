@@ -99,6 +99,11 @@ func HandleCommand(w http.ResponseWriter, r *http.Request) {
 		ret = HandleCommandCW(msg, w, r)
 	} else if msg.Op == message.OpInit {
 		ret = HandleCommandInit(msg, w, r)
+	} else if msg.Op == message.OpShow {
+		log.Printf("Show: %s", msg.PayloadString())
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.Write(msg.Payload)
+		return
 	} else {
 		ret = message.Create(message.OpUnknown, 0, []byte{})
 	}

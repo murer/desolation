@@ -41,8 +41,8 @@
     $('form').submit(function (evt) {
         evt.preventDefault()
         var msgInput = $(this).find('[name=msg]').val()
-        if (msgInput.indexOf(':') >= 0) {
-            generateResp(msgInput)
+        if (msgInput.startsWith('draw:')) {
+            generateResp(msgInput.substring(5))
             return
         }
         $.ajax({
