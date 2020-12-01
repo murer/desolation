@@ -36,7 +36,7 @@ func TestUnknown(t *testing.T) {
 	util.Check(err)
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
-	assert.Equal(t, message.CreateUnknown(200), message.Decode(util.ReadAllString(resp.Body)))
+	assert.Equal(t, message.CreateUnknown(200, 4), message.Decode(util.ReadAllString(resp.Body)))
 }
 
 func TestEchoJson(t *testing.T) {
@@ -75,7 +75,7 @@ func TestCommandWrite(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, uint64(5), rmsg.Rid)
+	assert.Equal(t, uint32(5), rmsg.Rid)
 	assert.Equal(t, []byte{}, rmsg.Payload)
 }
 
@@ -116,8 +116,8 @@ func TestCommandCW(t *testing.T) {
 	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
 	rmsg := message.Decode(util.ReadAllString(resp.Body))
 	assert.Equal(t, message.OpOk, rmsg.Op)
-	assert.Equal(t, uint64(7), rmsg.Rid)
-	assert.Equal(t, "test", string(rmsg.Payload))
+	assert.Equal(t, uint32(7), rmsg.Rid)
+	assert.Equal(t, "", string(rmsg.Payload))
 
 	assert.Equal(t, "", util.ReadAllString(pin))
 }

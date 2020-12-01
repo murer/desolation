@@ -57,8 +57,8 @@ func CreateMap(op uint8, rid uint32, params map[string]string) *Message {
 	return Create(op, rid, str)
 }
 
-func CreateUnknown(op uint8) *Message {
-	return Create(op, 0, []byte{})
+func CreateUnknown(op uint8, rid uint32) *Message {
+	return Create(OpUnknown, rid, []byte{})
 }
 
 func (me *Message) Encode() string {
