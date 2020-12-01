@@ -39,9 +39,16 @@ cmd_build_all() {
   cmd_build linux
   cmd_build darwin
   cmd_build windows
+  _build_enc
   cd build
   sha256sum -b * > SHA256
   cd -
+}
+
+_build_enc() {
+  ls build | while read k; do 
+    cat "build/$k" | base64 > "build/$k.base64.txt"
+  done
 }
 
 cmd_test() {
