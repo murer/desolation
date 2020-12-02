@@ -44,6 +44,8 @@ func Config() {
 
 	configSend()
 
+	configCheckConn()
+
 }
 
 func gconf() {
@@ -67,17 +69,21 @@ func configGuest() {
 	})
 }
 
+func makeSleep(cmd *cobra.Command) {
+	sleep, err := cmd.PersistentFlags().GetInt64("sleep")
+	util.Check(err)
+	if sleep > 0 {
+		log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
+		time.Sleep(time.Duration(sleep) * time.Second)
+	}
+}
+
 func configHost() {
 	cmd := &cobra.Command{
 		Use:  "host",
 		Args: cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			sleep, err := cmd.PersistentFlags().GetInt64("sleep")
-			util.Check(err)
-			if sleep > 0 {
-				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
-				time.Sleep(time.Duration(sleep) * time.Second)
-			}
+			makeSleep(cmd)
 			td, err := cmd.PersistentFlags().GetString("td")
 			util.Check(err)
 			host.SendKeyDelay = td
@@ -96,12 +102,7 @@ func configCap() {
 		Use:  "cap",
 		Args: cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			sleep, err := cmd.PersistentFlags().GetInt64("sleep")
-			util.Check(err)
-			if sleep > 0 {
-				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
-				time.Sleep(time.Duration(sleep) * time.Second)
-			}
+			makeSleep(cmd)
 			msg := host.CaptureText()
 			fmt.Printf("%s", msg)
 			return nil
@@ -117,12 +118,7 @@ func configSend() {
 		Use:  "send",
 		Args: cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			sleep, err := cmd.PersistentFlags().GetInt64("sleep")
-			util.Check(err)
-			if sleep > 0 {
-				log.Printf("You have %d seconds to put the cursor in the guest text input", sleep)
-				time.Sleep(time.Duration(sleep) * time.Second)
-			}
+			makeSleep(cmd)
 			content := util.ReadAll(os.Stdin)
 			host.HostSendMsg(message.Create(message.OpShow, 0, content))
 			return nil
@@ -130,7 +126,21 @@ func configSend() {
 	}
 	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
 	rootCmd.AddCommand(cmd)
+}
 
+func configCheckConn() {
+	cmd := &cobra.Command{
+		Use:  "checkconn",
+		Args: cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			makeSleep(cmd)
+			host.CheckConn()
+			log.Printf("Success")
+			return nil
+		},
+	}
+	cmd.PersistentFlags().Int64("sleep", 5, "Time you need to position your cursor on the guest input text")
+	rootCmd.AddCommand(cmd)
 }
 
 func Execute() {

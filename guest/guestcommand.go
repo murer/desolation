@@ -30,7 +30,6 @@ func HandleCommandWrite(m *message.Message, w http.ResponseWriter, r *http.Reque
 }
 
 func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
-	log.Print("xxx2")
 	content := In.Shift()
 	if content == nil {
 		return message.Create(message.OpOk, 0, []byte{})

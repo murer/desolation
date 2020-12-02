@@ -68,10 +68,8 @@ cmd_test_ssh() {
   ssh -o "ProxyCommand go run main.go guest %h %p" "$@"
 }
 
-cmd_resource2go() {
-  ls guest/public | while read k; do
-    echo "package public"
-  done
+cmd_cap() {
+  sleep 5 && (import -window root png:- | zbarimg png:-)
 }
 
 cd "$(dirname "$0")"; _cmd="${1?"cmd is required"}"; shift; "cmd_${_cmd}" "$@"

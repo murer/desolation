@@ -1,6 +1,7 @@
 package util
 
 import (
+	"crypto/rand"
 	"io"
 	"io/ioutil"
 	"log"
@@ -53,4 +54,14 @@ func ReadFully(r io.Reader, n int) []byte {
 		log.Panicf("wrong %d, expected %d", nr, n)
 	}
 	return buf
+}
+
+func Rand(len int) []byte {
+	token := make([]byte, len)
+	n, err := rand.Read(token)
+	Check(err)
+	if n != len {
+		log.Fatalf("wrong, exp: %d, but was: %d", len, n)
+	}
+	return token
 }

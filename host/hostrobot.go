@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/murer/desolation/message"
+	"github.com/murer/desolation/util"
 )
 
 var currentRid uint32 = 10
@@ -26,19 +27,25 @@ func HostCommand(msg *message.Message) *message.Message {
 	return ret
 }
 
-func checkConn() {
+func CheckConn() *message.Message {
+	data := util.Rand(256)
 	rid := nRid()
-	msg := message.CreateString(message.OpEcho, rid, "checktext")
+	msg := message.Create(message.OpEcho, rid, data)
 	msg = HostCommand(msg)
-	if msg.PayloadString() != "checktext" {
+	if len(msg.Payload) != len(data) {
 		log.Fatalf("Wrong: %v", msg)
 	}
+	for index, element := range data {
+		if element != msg.Payload[index] {
+			log.Fatalf("Wrong, idx: %d, exp: %d, but was: %d", index, element, msg.Payload[index])
+		}
+	}
+	return HostCommand(message.Create(message.OpInit, 0, []byte{}))
 }
 
 func Start() {
-	msg := CaptureRid(1)
+	msg := CheckConn()
 	log.Printf("Init: %v", msg)
-	checkConn()
 
 	m := msg.PayloadMap()
 	host := m["host"]
