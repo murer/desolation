@@ -4,9 +4,10 @@ USER root
 
 RUN apt-get -y update
 RUN apt-get -y install zbar-tools xdotool imagemagick
-RUN apt-get -y install git wget xauth net-tools dnsutils inetutils-syslogd vim curl nmap iputils-ping
+RUN apt-get -y install git wget xauth net-tools lxterminal dnsutils inetutils-syslogd vim curl nmap iputils-ping
 RUN apt-get -y install openssh-server
 RUN apt-get -y install build-essential
+RUN apt-get -y install firefox
 
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
     echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list && \

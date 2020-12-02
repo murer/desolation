@@ -13,11 +13,14 @@ docker_golang() {
 }
 
 docker_devvnc() {
+  docker rm -f desolation-vnc || true
   docker volume create desolation_vscode_dev --label desolation_dev 1>&2 || true
   docker run $DESOLATION_DOCKER_EXTRA --rm --label desolation_dev \
     --mount source=desolation_vscode_dev,target=/home/hexblade/.vscode \
     -v "$(pwd)":/home/hexblade/desolation \
     -p 5900:5900 \
+    -p 5011:5010 \
+    --name desolation-vnc \
     murer/desolation-dev:local "$@"
 }
 
