@@ -1,4 +1,4 @@
-FROM murer/hexblade:edge
+FROM murer/hexblade:edge AS dev
 
 USER root
 
@@ -48,3 +48,9 @@ RUN go get -u golang.org/x/lint/golint
 RUN ssh-keygen -f "$HOME/.ssh/id_rsa" && cp "$HOME/.ssh/id_rsa.pub" "$HOME/.ssh/authorized_keys"
 
 COPY docker /opt/openerssh/docker
+
+FROM dev
+
+COPY --chown=hexblade:hexblade . /home/hexblade/desolation
+RUN ./desolation/build.sh test ./...
+RUN ./desolation/build.sh build_all
