@@ -8,7 +8,7 @@ With desolation you can create a connection beteween the remote/guest and the ho
 ### On guest screen (windows, linux or mac):
 
 ```shell
-ssh -O 'CommandProxy desolation guest %h %p' -g -D 5005 -R 5006 host command
+ssh -o 'CommandProxy desolation guest %h %p' -g -D 5005 -R 5006 host command
 ```
 
 Useful: `-o "StrictHostKeyChecking=no"`
