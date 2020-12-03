@@ -70,6 +70,7 @@ cmd_build() {
   docker rm -f desolation-build || true
   DESOLATION_DOCKER_EXTRA="--name desolation-build -w /home/hexblade/desolation/build" cmd_runi dev sha256sum -c SHA256
   docker cp desolation-build:/home/hexblade/desolation/build .
+  du -hs build/*
 }
 
 cd "$(dirname "$0")"; _cmd="${1?"cmd is required"}"; shift; "cmd_${_cmd}" "$@"
