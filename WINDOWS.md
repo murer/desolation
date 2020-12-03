@@ -29,5 +29,5 @@ wget "https://github.com/murer/desolation/releases/download/edge/desolation-wind
 Use non Admin PowerShell
 
 ```ps1
-ssh -o "ProxyCommand .\desolation.exe guest %h %p" "user@host" command 
+ssh -o "StrictHostKeyChecking=no" -o "ProxyCommand .\desolation.exe guest %h %p" "user@host" command 
 ```

@@ -8,10 +8,8 @@ With desolation you can create a connection beteween the remote/guest and the ho
 ### On guest screen (windows, linux or mac):
 
 ```shell
-ssh -o 'CommandProxy desolation guest %h %p' -g -D 5005 -R 5006 host command
+ssh -o "StrictHostKeyChecking=no" -o 'CommandProxy desolation guest %h %p' -g -D 5005 -R 5006 host command
 ```
-
-Useful: `-o "StrictHostKeyChecking=no"`
 
 Yet on guest, open a browser to be operated by the host: http://localhost:5010/
 
