@@ -38,9 +38,9 @@ func HostSendMsg(msg *message.Message) {
 			array[i] = "equal"
 		}
 	}
-	HostSendKeys([]string{"ctrl+a"})
-	HostSendKeys([]string{"BackSpace"})
-	time.Sleep(5 * time.Millisecond)
+	// HostSendKeys([]string{"ctrl+a"})
+	// HostSendKeys([]string{"BackSpace"})
+	// time.Sleep(5 * time.Millisecond)
 	HostSendKeys(array)
 	HostSendKeys([]string{"Return"})
 	time.Sleep(5 * time.Millisecond)

@@ -79,6 +79,7 @@ func hostDataReceived() {
 	}
 	if msg.Op == message.OpReaderClosed {
 		SocketReaderClose()
+		os.Exit(0)
 		return
 	}
 	if msg.Op != message.OpOk {

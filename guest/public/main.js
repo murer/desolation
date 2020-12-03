@@ -52,6 +52,7 @@
             data: msgInput,
             contentType: 'text/plain',
             success: function (ret) {
+                $('.msg-input').val('').focus()
                 $('.msg-output-text').val(ret)
                 generateResp(ret)
             }
