@@ -100,6 +100,26 @@ func TestCommandRead(t *testing.T) {
 	assert.Equal(t, "test", string(rmsg.Payload))
 }
 
+func TestCommandReadEOF(t *testing.T) {
+	original := guest.In
+	guest.In = util.ChannelReader(bytes.NewReader([]byte("")), 256)
+	defer func() { guest.In = original }()
+
+	server := httptest.NewServer(http.Handler(guest.Handler()))
+	defer server.Close()
+	t.Logf("URL: %s", server.URL)
+
+	msg := message.CreateString(message.OpRead, 6, "test")
+	resp, err := http.Post(server.URL+"/api/command", "text/plain", bytes.NewReader([]byte(msg.Encode())))
+	util.Check(err)
+	assert.Equal(t, 200, resp.StatusCode)
+	assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("Content-Type"))
+	rmsg := message.Decode(util.ReadAllString(resp.Body))
+	assert.Equal(t, message.OpReaderClosed, rmsg.Op)
+	assert.Equal(t, uint32(6), rmsg.Rid)
+	assert.Equal(t, []byte{}, rmsg.Payload)
+}
+
 func TestCommandCW(t *testing.T) {
 	original := guest.Out
 	pin, pout := io.Pipe()

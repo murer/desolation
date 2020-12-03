@@ -43,7 +43,7 @@ func HandleCommandRead(m *message.Message, w http.ResponseWriter, r *http.Reques
 		log.Panicf("Wrong: %#v", content)
 	}
 	log.Print("Stdin EOF...")
-	return nil
+	return message.Create(message.OpReaderClosed, 0, []byte{})
 }
 
 func HandleCommandCW(m *message.Message, w http.ResponseWriter, r *http.Request) *message.Message {
